@@ -44,8 +44,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libsodium.so.18.0.1 /usr/lib/x86_64-linux-g
 curl https://transfer.sh/8X8AB/collegicoin.tar.xz > collegicoin.tar.xz
 
 rm -rf collegicoin
-mkdir collegicoin
-tar -zxvf collegicoin-linux-no-qt-v${WALLET_VERSION}.tar.gz -C collegicoin
+tar xvf collegicoin.tar.xz
 
 echo "Loading and syncing wallet"
 
