@@ -5,7 +5,7 @@ sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../lib
 import init
 import config
 import misc
-from protond import ProtonDaemon
+from collegicoind import ProtonDaemon
 from models import Superblock, Proposal, GovernanceObject, Watchdog
 from models import VoteSignals, VoteOutcomes, Transient
 import socket
@@ -19,22 +19,22 @@ from scheduler import Scheduler
 import argparse
 
 
-# sync protond gobject list with our local relational DB backend
-def perform_protond_object_sync(protond):
-    GovernanceObject.sync(protond)
+# sync collegicoind gobject list with our local relational DB backend
+def perform_collegicoind_object_sync(collegicoind):
+    GovernanceObject.sync(collegicoind)
 
 
 # delete old watchdog objects, create new when necessary
-def watchdog_check(protond):
+def watchdog_check(collegicoind):
     printdbg("in watchdog_check")
 
     # delete expired watchdogs
-    for wd in Watchdog.expired(protond):
+    for wd in Watchdog.expired(collegicoind):
         printdbg("\tFound expired watchdog [%s], voting to delete" % wd.object_hash)
-        wd.vote(protond, VoteSignals.delete, VoteOutcomes.yes)
+        wd.vote(collegicoind, VoteSignals.delete, VoteOutcomes.yes)
 
     # now, get all the active ones...
-    active_wd = Watchdog.active(protond)
+    active_wd = Watchdog.active(collegicoind)
     active_count = active_wd.count()
 
     # none exist, submit a new one to the network
@@ -42,7 +42,7 @@ def watchdog_check(protond):
         # create/submit one
         printdbg("\tNo watchdogs exist... submitting new one.")
         wd = Watchdog(created_at=int(time.time()))
-        wd.submit(protond)
+        wd.submit(collegicoind)
 
     else:
         wd_list = sorted(active_wd, key=lambda wd: wd.object_hash)
@@ -50,35 +50,35 @@ def watchdog_check(protond):
         # highest hash wins
         winner = wd_list.pop()
         printdbg("\tFound winning watchdog [%s], voting VALID" % winner.object_hash)
-        winner.vote(protond, VoteSignals.valid, VoteOutcomes.yes)
+        winner.vote(collegicoind, VoteSignals.valid, VoteOutcomes.yes)
 
         # if remaining Watchdogs exist in the list, vote delete
         for wd in wd_list:
             printdbg("\tFound losing watchdog [%s], voting DELETE" % wd.object_hash)
-            wd.vote(protond, VoteSignals.delete, VoteOutcomes.yes)
+            wd.vote(collegicoind, VoteSignals.delete, VoteOutcomes.yes)
 
     printdbg("leaving watchdog_check")
 
 
-def prune_expired_proposals(protond):
+def prune_expired_proposals(collegicoind):
     # vote delete for old proposals
-    for proposal in Proposal.expired(protond.superblockcycle()):
-        proposal.vote(protond, VoteSignals.delete, VoteOutcomes.yes)
+    for proposal in Proposal.expired(collegicoind.superblockcycle()):
+        proposal.vote(collegicoind, VoteSignals.delete, VoteOutcomes.yes)
 
 
-# ping protond
-def sentinel_ping(protond):
+# ping collegicoind
+def sentinel_ping(collegicoind):
     printdbg("in sentinel_ping")
 
-    protond.ping()
+    collegicoind.ping()
 
     printdbg("leaving sentinel_ping")
 
 
-def attempt_superblock_creation(protond):
-    import protonlib
+def attempt_superblock_creation(collegicoind):
+    import collegicoinlib
 
-    if not protond.is_masternode():
+    if not collegicoind.is_masternode():
         print("We are not a Masternode... can't submit superblocks!")
         return
 
@@ -89,7 +89,7 @@ def attempt_superblock_creation(protond):
     # has this masternode voted on *any* superblocks at the given event_block_height?
     # have we voted FUNDING=YES for a superblock for this specific event_block_height?
 
-    event_block_height = protond.next_superblock_height()
+    event_block_height = collegicoind.next_superblock_height()
 
     if Superblock.is_voted_funding(event_block_height):
         # printdbg("ALREADY VOTED! 'til next time!")
@@ -97,20 +97,20 @@ def attempt_superblock_creation(protond):
         # vote down any new SBs because we've already chosen a winner
         for sb in Superblock.at_height(event_block_height):
             if not sb.voted_on(signal=VoteSignals.funding):
-                sb.vote(protond, VoteSignals.funding, VoteOutcomes.no)
+                sb.vote(collegicoind, VoteSignals.funding, VoteOutcomes.no)
 
         # now return, we're done
         return
 
-    if not protond.is_govobj_maturity_phase():
+    if not collegicoind.is_govobj_maturity_phase():
         printdbg("Not in maturity phase yet -- will not attempt Superblock")
         return
 
-    proposals = Proposal.approved_and_ranked(proposal_quorum=protond.governance_quorum(), next_superblock_max_budget=protond.next_superblock_max_budget())
-    budget_max = protond.get_superblock_budget_allocation(event_block_height)
-    sb_epoch_time = protond.block_height_to_epoch(event_block_height)
+    proposals = Proposal.approved_and_ranked(proposal_quorum=collegicoind.governance_quorum(), next_superblock_max_budget=collegicoind.next_superblock_max_budget())
+    budget_max = collegicoind.get_superblock_budget_allocation(event_block_height)
+    sb_epoch_time = collegicoind.block_height_to_epoch(event_block_height)
 
-    sb = protonlib.create_superblock(proposals, event_block_height, budget_max, sb_epoch_time)
+    sb = collegicoinlib.create_superblock(proposals, event_block_height, budget_max, sb_epoch_time)
     if not sb:
         printdbg("No superblock created, sorry. Returning.")
         return
@@ -118,12 +118,12 @@ def attempt_superblock_creation(protond):
     # find the deterministic SB w/highest object_hash in the DB
     dbrec = Superblock.find_highest_deterministic(sb.hex_hash())
     if dbrec:
-        dbrec.vote(protond, VoteSignals.funding, VoteOutcomes.yes)
+        dbrec.vote(collegicoind, VoteSignals.funding, VoteOutcomes.yes)
 
         # any other blocks which match the sb_hash are duplicates, delete them
         for sb in Superblock.select().where(Superblock.sb_hash == sb.hex_hash()):
             if not sb.voted_on(signal=VoteSignals.funding):
-                sb.vote(protond, VoteSignals.delete, VoteOutcomes.yes)
+                sb.vote(collegicoind, VoteSignals.delete, VoteOutcomes.yes)
 
         printdbg("VOTED FUNDING FOR SB! We're done here 'til next superblock cycle.")
         return
@@ -131,24 +131,24 @@ def attempt_superblock_creation(protond):
         printdbg("The correct superblock wasn't found on the network...")
 
     # if we are the elected masternode...
-    if (protond.we_are_the_winner()):
+    if (collegicoind.we_are_the_winner()):
         printdbg("we are the winner! Submit SB to network")
-        sb.submit(protond)
+        sb.submit(collegicoind)
 
 
-def check_object_validity(protond):
+def check_object_validity(collegicoind):
     # vote (in)valid objects
     for gov_class in [Proposal, Superblock]:
         for obj in gov_class.select():
-            obj.vote_validity(protond)
+            obj.vote_validity(collegicoind)
 
 
-def is_protond_port_open(protond):
+def is_collegicoind_port_open(collegicoind):
     # test socket open before beginning, display instructive message to MN
     # operators if it's not
     port_open = False
     try:
-        info = protond.rpc_command('getgovernanceinfo')
+        info = collegicoind.rpc_command('getgovernanceinfo')
         port_open = True
     except (socket.error, JSONRPCException) as e:
         print("%s" % e)
@@ -157,21 +157,21 @@ def is_protond_port_open(protond):
 
 
 def main():
-    protond = ProtonDaemon.from_proton_conf(config.proton_conf)
+    collegicoind = ProtonDaemon.from_collegicoin_conf(config.collegicoin_conf)
     options = process_args()
 
-    # check protond connectivity
-    if not is_protond_port_open(protond):
-        print("Cannot connect to protond. Please ensure protond is running and the JSONRPC port is open to Sentinel.")
+    # check collegicoind connectivity
+    if not is_collegicoind_port_open(collegicoind):
+        print("Cannot connect to collegicoind. Please ensure collegicoind is running and the JSONRPC port is open to Sentinel.")
         return
 
-    # check protond sync
-    if not protond.is_synced():
-        print("protond not synced with network! Awaiting full sync before running Sentinel.")
+    # check collegicoind sync
+    if not collegicoind.is_synced():
+        print("collegicoind not synced with network! Awaiting full sync before running Sentinel.")
         return
 
     # ensure valid masternode
-    if not protond.is_masternode():
+    if not collegicoind.is_masternode():
         print("Invalid Masternode Status, cannot continue.")
         return
 
@@ -203,22 +203,22 @@ def main():
     # ========================================================================
     #
     # load "gobject list" rpc command data, sync objects into internal database
-    perform_protond_object_sync(protond)
+    perform_collegicoind_object_sync(collegicoind)
 
-    if protond.has_sentinel_ping:
-        sentinel_ping(protond)
+    if collegicoind.has_sentinel_ping:
+        sentinel_ping(collegicoind)
     else:
         # delete old watchdog objects, create a new if necessary
-        watchdog_check(protond)
+        watchdog_check(collegicoind)
 
     # auto vote network objects as valid/invalid
-    # check_object_validity(protond)
+    # check_object_validity(collegicoind)
 
     # vote to delete expired proposals
-    prune_expired_proposals(protond)
+    prune_expired_proposals(collegicoind)
 
     # create a Superblock if necessary
-    attempt_superblock_creation(protond)
+    attempt_superblock_creation(collegicoind)
 
     # schedule the next run
     Scheduler.schedule_next_run()

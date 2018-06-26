@@ -3,7 +3,7 @@
 """
 import sys
 import os
-from proton_config import ProtonConfig
+from collegicoin_config import ProtonConfig
 
 default_sentinel_config = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '../sentinel.conf')
@@ -11,19 +11,19 @@ default_sentinel_config = os.path.normpath(
 sentinel_config_file = os.environ.get('SENTINEL_CONFIG', default_sentinel_config)
 sentinel_cfg = ProtonConfig.tokenize(sentinel_config_file)
 sentinel_version = "1.1.0"
-min_protond_proto_version_with_sentinel_ping = 70207
+min_collegicoind_proto_version_with_sentinel_ping = 70207
 
 
-def get_proton_conf():
+def get_collegicoin_conf():
     home = os.environ.get('HOME')
 
-    proton_conf = os.path.join(home, ".protoncore/proton.conf")
+    collegicoin_conf = os.path.join(home, ".collegicoincore/collegicoin.conf")
     if sys.platform == 'darwin':
-        proton_conf = os.path.join(home, "Library/Application Support/ProtonCore/proton.conf")
+        collegicoin_conf = os.path.join(home, "Library/Application Support/ProtonCore/collegicoin.conf")
 
-    proton_conf = sentinel_cfg.get('proton_conf', proton_conf)
+    collegicoin_conf = sentinel_cfg.get('collegicoin_conf', collegicoin_conf)
 
-    return proton_conf
+    return collegicoin_conf
 
 
 def get_network():
@@ -79,6 +79,6 @@ def get_db_conn():
     return db
 
 
-proton_conf = get_proton_conf()
+collegicoin_conf = get_collegicoin_conf()
 network = get_network()
 db = get_db_conn()

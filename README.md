@@ -3,7 +3,7 @@
 
 Sentinel is an autonomous agent for persisting, processing and automating Proton governance objects and tasks.
 
-Sentinel is implemented as a Python application that binds to a local version protond instance on each Proton Masternode.
+Sentinel is implemented as a Python application that binds to a local version collegicoind instance on each Proton Masternode.
 
 This guide covers installing Sentinel onto an existing Masternode in Ubuntu 14.04 / 16.04.
 
@@ -22,13 +22,13 @@ Update system packages and ensure virtualenv is installed:
 
 Make sure the local Proton daemon running is at least version 1.0.1
 
-    $ proton-cli getinfo | grep version
+    $ collegicoin-cli getinfo | grep version
 
 ### 2. Install Sentinel
 
 Clone the Sentinel repo and install Python dependencies.
 
-    $ git clone https://github.com/protoncoin/proton_sentinel.git && cd proton_sentinel
+    $ git clone https://github.com/collegicoin/collegicoin_sentinel.git && cd collegicoin_sentinel
     $ virtualenv ./venv
     $ ./venv/bin/pip install -r requirements.txt
 
@@ -38,9 +38,9 @@ Set up a crontab entry to call Sentinel every minute:
 
     $ crontab -e
 
-In the crontab editor, add the lines below, replacing '/home/YOURUSERNAME/proton_sentinel' to the path where you cloned sentinel to:
+In the crontab editor, add the lines below, replacing '/home/YOURUSERNAME/collegicoin_sentinel' to the path where you cloned sentinel to:
 
-    * * * * * cd /home/YOURUSERNAME/proton_sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1
+    * * * * * cd /home/YOURUSERNAME/collegicoin_sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1
 
 ### 4. Test the Configuration
 
@@ -48,13 +48,13 @@ Test the config by runnings all tests from the sentinel folder you cloned into
 
     $ ./venv/bin/py.test ./test
 
-With all tests passing and crontab setup, Sentinel will stay in sync with protond and the installation is complete
+With all tests passing and crontab setup, Sentinel will stay in sync with collegicoind and the installation is complete
 
 ## Configuration
 
-An alternative (non-default) path to the `proton.conf` file can be specified in `sentinel.conf`:
+An alternative (non-default) path to the `collegicoin.conf` file can be specified in `sentinel.conf`:
 
-    proton_conf=/path/to/proton.conf
+    collegicoin_conf=/path/to/collegicoin.conf
 
 ## Troubleshooting
 

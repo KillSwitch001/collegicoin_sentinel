@@ -39,16 +39,16 @@ free -h
 echo "SWAP setup complete..."
 #end optional swap section
 
-wget https://github.com/protoncoin/protoncoin/releases/download/v${WALLET_VERSION}/protoncoin-linux-no-qt-v${WALLET_VERSION}.tar.gz
+wget https://github.com/collegicoin/collegicoin/releases/download/v${WALLET_VERSION}/collegicoin-linux-no-qt-v${WALLET_VERSION}.tar.gz
 
-rm -rf proton
-mkdir proton
-tar -zxvf protoncoin-linux-no-qt-v${WALLET_VERSION}.tar.gz -C proton
+rm -rf collegicoin
+mkdir collegicoin
+tar -zxvf collegicoin-linux-no-qt-v${WALLET_VERSION}.tar.gz -C collegicoin
 
 echo "Loading and syncing wallet"
 
 echo "If you see *error: Could not locate RPC credentials* message, do not worry"
-~/proton/proton-cli stop
+~/collegicoin/collegicoin-cli stop
 sleep 10
 echo ""
 echo "=================================================================="
@@ -56,31 +56,31 @@ echo "DO NOT CLOSE THIS WINDOW OR TRY TO FINISH THIS PROCESS "
 echo "PLEASE WAIT 5 MINUTES UNTIL YOU SEE THE RELOADING WALLET MESSAGE"
 echo "=================================================================="
 echo ""
-~/proton/protond -daemon
+~/collegicoin/collegicoind -daemon
 sleep 250
-~/proton/proton-cli stop
+~/collegicoin/collegicoin-cli stop
 sleep 20
 
-cat <<EOF > ~/.protoncore/proton.conf
-rpcuser=protoncoin
+cat <<EOF > ~/.collegicoincore/collegicoin.conf
+rpcuser=collegicoin
 rpcpassword=${PASSWORD}
 EOF
 
 echo "Reloading wallet..."
-~/proton/protond -daemon
+~/collegicoin/collegicoind -daemon
 sleep 30
 
 echo "Making genkey..."
-GENKEY=$(~/proton/proton-cli masternode genkey)
+GENKEY=$(~/collegicoin/collegicoin-cli masternode genkey)
 
 echo "Mining info..."
-~/proton/proton-cli getmininginfo
-~/proton/proton-cli stop
+~/collegicoin/collegicoin-cli getmininginfo
+~/collegicoin/collegicoin-cli stop
 
 echo "Creating final config..."
 
-cat <<EOF > ~/.protoncore/proton.conf
-rpcuser=protoncoin
+cat <<EOF > ~/.collegicoincore/collegicoin.conf
+rpcuser=collegicoin
 rpcpassword=$PASSWORD
 rpcallowip=127.0.0.1
 server=1
@@ -117,16 +117,16 @@ EOF
 #echo "Basic security completed..."
 
 echo "Restarting wallet with new configs, 30 seconds..."
-~/proton/protond -daemon
+~/collegicoin/collegicoind -daemon
 sleep 30
 
 echo "Installing sentinel..."
-cd /root/.protoncore
+cd /root/.collegicoincore
 sudo apt-get install -y git python-virtualenv
 
-sudo git clone https://github.com/protoncoin/proton_sentinel.git
+sudo git clone https://github.com/collegicoin/collegicoin_sentinel.git
 
-cd proton_sentinel
+cd collegicoin_sentinel
 
 export LC_ALL=C
 sudo apt-get install -y virtualenv
@@ -134,13 +134,13 @@ sudo apt-get install -y virtualenv
 virtualenv ./venv
 ./venv/bin/pip install -r requirements.txt
 
-echo "proton_conf=/root/.protoncore/proton.conf" >> /root/.protoncore/proton_sentinel/sentinel.conf
+echo "collegicoin_conf=/root/.collegicoincore/collegicoin.conf" >> /root/.collegicoincore/collegicoin_sentinel/sentinel.conf
 
 echo "Adding crontab jobs..."
 crontab -l > tempcron
 #echo new cron into cron file
-echo "* * * * * cd /root/.protoncore/proton_sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1" >> tempcron
-echo "@reboot /bin/sleep 20 ; /root/proton/protond -daemon &" >> tempcron
+echo "* * * * * cd /root/.collegicoincore/collegicoin_sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1" >> tempcron
+echo "@reboot /bin/sleep 20 ; /root/collegicoin/collegicoind -daemon &" >> tempcron
 
 #install new cron file
 crontab tempcron
@@ -149,13 +149,13 @@ rm tempcron
 SENTINEL_DEBUG=1 ./venv/bin/python bin/sentinel.py
 echo "Sentinel Installed"
 
-echo "proton-cli getmininginfo:"
-~/proton/proton-cli getmininginfo
+echo "collegicoin-cli getmininginfo:"
+~/collegicoin/collegicoin-cli getmininginfo
 
 sleep 15
 
 echo "Masternode status:"
-~/proton/proton-cli masternode status
+~/collegicoin/collegicoin-cli masternode status
 
 echo "If you get \"Masternode not in masternode list\" status, don't worry, you just have to start your MN from your local wallet and the status will change"
 echo ""
@@ -163,5 +163,5 @@ echo "INSTALLED WITH VPS IP: $WANIP:$PORT"
 sleep 1
 echo "INSTALLED WITH MASTERNODE PRIVATE GENKEY: $GENKEY"
 sleep 1
-echo "rpcuser=protoncoin"
+echo "rpcuser=collegicoin"
 echo "rpcpassword=$PASSWORD"

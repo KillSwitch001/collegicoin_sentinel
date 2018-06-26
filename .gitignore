@@ -12,9 +12,9 @@ lib/base58.pyc
 lib/config.pyc
 lib/governance_class.pyc
 lib/init.pyc
-lib/proton_config.pyc
-lib/protond.pyc
-lib/protonlib.pyc
+lib/collegicoin_config.pyc
+lib/collegicoind.pyc
+lib/collegicoinlib.pyc
 lib/masternode.pyc
 lib/misc.pyc
 lib/models.pyc

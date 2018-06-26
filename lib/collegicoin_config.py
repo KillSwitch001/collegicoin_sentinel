@@ -11,7 +11,7 @@ class ProtonConfig():
 
     @classmethod
     def slurp_config_file(self, filename):
-        # read proton.conf config but skip commented lines
+        # read collegicoin.conf config but skip commented lines
         f = io.open(filename)
         lines = []
         for line in f:
@@ -20,14 +20,14 @@ class ProtonConfig():
             lines.append(line)
         f.close()
 
-        # data is proton.conf without commented lines
+        # data is collegicoin.conf without commented lines
         data = ''.join(lines)
 
         return data
 
     @classmethod
     def get_rpc_creds(self, data, network='mainnet'):
-        # get rpc info from proton.conf
+        # get rpc info from collegicoin.conf
         match = re.findall(r'rpc(user|password|port)=(.*?)$', data, re.MULTILINE)
 
         # python >= 2.7
@@ -36,11 +36,11 @@ class ProtonConfig():
         # standard Proton defaults...
         default_port = 9998 if (network == 'mainnet') else 19998
 
-        # use default port for network if not specified in proton.conf
+        # use default port for network if not specified in collegicoin.conf
         if not ('port' in creds):
             creds[u'port'] = default_port
 
-        # convert to an int if taken from proton.conf
+        # convert to an int if taken from collegicoin.conf
         creds[u'port'] = int(creds[u'port'])
 
         # return a dictionary with RPC credential key, value pairs

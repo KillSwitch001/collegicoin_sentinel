@@ -19,26 +19,26 @@ class GovernanceClass(object):
         return self.governance_object
 
     # pass thru to GovernanceObject#vote
-    def vote(self, protond, signal, outcome):
-        return self.go.vote(protond, signal, outcome)
+    def vote(self, collegicoind, signal, outcome):
+        return self.go.vote(collegicoind, signal, outcome)
 
     # pass thru to GovernanceObject#voted_on
     def voted_on(self, **kwargs):
         return self.go.voted_on(**kwargs)
 
-    def vote_validity(self, protond):
+    def vote_validity(self, collegicoind):
         if self.is_valid():
             printdbg("Voting valid! %s: %d" % (self.__class__.__name__, self.id))
-            self.vote(protond, models.VoteSignals.valid, models.VoteOutcomes.yes)
+            self.vote(collegicoind, models.VoteSignals.valid, models.VoteOutcomes.yes)
         else:
             printdbg("Voting INVALID! %s: %d" % (self.__class__.__name__, self.id))
-            self.vote(protond, models.VoteSignals.valid, models.VoteOutcomes.no)
+            self.vote(collegicoind, models.VoteSignals.valid, models.VoteOutcomes.no)
 
     def get_submit_command(self):
         object_fee_tx = self.go.object_fee_tx
 
-        import protonlib
-        obj_data = protonlib.SHIM_serialise_for_protond(self.serialise())
+        import collegicoinlib
+        obj_data = collegicoinlib.SHIM_serialise_for_collegicoind(self.serialise())
 
         cmd = ['gobject', 'submit', '0', '1', str(int(time.time())), obj_data, object_fee_tx]
 
@@ -55,12 +55,12 @@ class GovernanceClass(object):
             "AbstainCount": self.go.abstain_count,
         }
 
-        # return a dict similar to protond "gobject list" output
+        # return a dict similar to collegicoind "gobject list" output
         return {self.object_hash: dikt}
 
     def get_submit_command(self):
-        import protonlib
-        obj_data = protonlib.SHIM_serialise_for_protond(self.serialise())
+        import collegicoinlib
+        obj_data = collegicoinlib.SHIM_serialise_for_collegicoind(self.serialise())
 
         # new objects won't have parent_hash, revision, etc...
         cmd = ['gobject', 'submit', '0', '1', str(int(time.time())), obj_data]
@@ -71,15 +71,15 @@ class GovernanceClass(object):
 
         return cmd
 
-    def submit(self, protond):
+    def submit(self, collegicoind):
         # don't attempt to submit a superblock unless a masternode
         # note: will probably re-factor this, this has code smell
-        if (self.only_masternode_can_submit and not protond.is_masternode()):
+        if (self.only_masternode_can_submit and not collegicoind.is_masternode()):
             print("Not a masternode. Only masternodes may submit these objects")
             return
 
         try:
-            object_hash = protond.rpc_command(*self.get_submit_command())
+            object_hash = collegicoind.rpc_command(*self.get_submit_command())
             printdbg("Submitted: [%s]" % object_hash)
         except JSONRPCException as e:
             print("Unable to submit: %s" % e.message)
@@ -95,9 +95,9 @@ class GovernanceClass(object):
 
         return binascii.hexlify(simplejson.dumps((obj_type, self.get_dict()), sort_keys=True).encode('utf-8')).decode('utf-8')
 
-    def protond_serialise(self):
-        import protonlib
-        return protonlib.SHIM_serialise_for_protond(self.serialise())
+    def collegicoind_serialise(self):
+        import collegicoinlib
+        return collegicoinlib.SHIM_serialise_for_collegicoind(self.serialise())
 
     @classmethod
     def serialisable_fields(self):

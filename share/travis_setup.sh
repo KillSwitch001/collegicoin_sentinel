@@ -1,9 +1,9 @@
 #!/bin/bash
 set -evx
 
-mkdir ~/.protoncore
+mkdir ~/.collegicoincore
 
 # safety check
-if [ ! -f ~/.protoncore/.proton.conf ]; then
-  cp share/proton.conf.example ~/.protoncore/proton.conf
+if [ ! -f ~/.collegicoincore/.collegicoin.conf ]; then
+  cp share/collegicoin.conf.example ~/.collegicoincore/collegicoin.conf
 fi
