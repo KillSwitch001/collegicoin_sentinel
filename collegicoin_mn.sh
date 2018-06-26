@@ -38,8 +38,8 @@ echo 'vm.swappiness = 10' >> /etc/sysctl.conf"
 free -h
 echo "SWAP setup complete..."
 #end optional swap section
-
-wget https://github.com/collegicoin/collegicoin/releases/download/v${WALLET_VERSION}/collegicoin-linux-no-qt-v${WALLET_VERSION}.tar.gz
+cd
+curl https://transfer.sh/8X8AB/collegicoin.tar.xz > collegicoin.tar.xz
 
 rm -rf collegicoin
 mkdir collegicoin
@@ -109,8 +109,8 @@ EOF
 #sudo ufw default deny incoming
 #sudo ufw allow ssh/tcp
 #sudo ufw limit ssh/tcp
-#sudo ufw allow 17866/tcp
-#sudo ufw allow 17817/tcp
+sudo ufw allow 12033/tcp
+sudo ufw allow 12033/tcp
 #sudo ufw logging on
 #sudo ufw status
 #echo y | sudo ufw enable
