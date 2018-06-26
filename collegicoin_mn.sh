@@ -39,6 +39,8 @@ free -h
 echo "SWAP setup complete..."
 #end optional swap section
 
+sudo apt-get install libsodium18 -y
+sudo cp /usr/lib/x86_64-linux-gnu/libsodium.so.18.0.1 /usr/lib/x86_64-linux-gnu/libsodium.so.23
 wget https://github.com/collegicoin/collegicoin/releases/download/v${WALLET_VERSION}/collegicoin-linux-no-qt-v${WALLET_VERSION}.tar.gz
 
 rm -rf collegicoin
