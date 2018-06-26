@@ -78,9 +78,9 @@ def proposal():
 
 
 def test_proposal_is_valid(proposal):
-    from collegicoind import ProtonDaemon
+    from collegicoind import CollegicoinDaemon
     import collegicoinlib
-    collegicoind = ProtonDaemon.from_collegicoin_conf(config.collegicoin_conf)
+    collegicoind = CollegicoinDaemon.from_collegicoin_conf(config.collegicoin_conf)
 
     orig = Proposal(**proposal.get_dict())  # make a copy
 
@@ -149,7 +149,7 @@ def test_proposal_is_valid(proposal):
     proposal.payment_address = '221 B Baker St., London, United Kingdom'
     assert proposal.is_valid() is False
 
-    # this is actually the Proton foundation multisig address...
+    # this is actually the Collegicoin foundation multisig address...
     proposal.payment_address = '7gnwGHt17heGpG9Crfeh4KGpYNFugPhJdh'
     assert proposal.is_valid() is False
 
@@ -237,8 +237,8 @@ def test_proposal_is_deletable(proposal):
 
 # deterministic ordering
 def test_approved_and_ranked(go_list_proposals):
-    from collegicoind import ProtonDaemon
-    collegicoind = ProtonDaemon.from_collegicoin_conf(config.collegicoin_conf)
+    from collegicoind import CollegicoinDaemon
+    collegicoind = CollegicoinDaemon.from_collegicoin_conf(config.collegicoin_conf)
 
     for item in go_list_proposals:
         (go, subobj) = GovernanceObject.import_gobject_from_collegicoind(collegicoind, item)

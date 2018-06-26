@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from misc import printdbg
 
 
-class ProtonConfig():
+class CollegicoinConfig():
 
     @classmethod
     def slurp_config_file(self, filename):
@@ -33,7 +33,7 @@ class ProtonConfig():
         # python >= 2.7
         creds = {key: value for (key, value) in match}
 
-        # standard Proton defaults...
+        # standard Collegicoin defaults...
         default_port = 9998 if (network == 'mainnet') else 19998
 
         # use default port for network if not specified in collegicoin.conf

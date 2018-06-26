@@ -9,10 +9,10 @@ import config
 from models import Superblock, Proposal, GovernanceObject, Setting, Signal, Vote, Outcome, Watchdog
 from models import VoteSignals, VoteOutcomes
 from peewee import PeeweeException  # , OperationalError, IntegrityError
-from collegicoind import ProtonDaemon
+from collegicoind import CollegicoinDaemon
 import collegicoinlib
 from decimal import Decimal
-collegicoind = ProtonDaemon.from_collegicoin_conf(config.collegicoin_conf)
+collegicoind = CollegicoinDaemon.from_collegicoin_conf(config.collegicoin_conf)
 import misc
 # ==============================================================================
 # do stuff here

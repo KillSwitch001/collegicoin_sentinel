@@ -5,7 +5,7 @@ sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../lib
 import init
 import config
 import misc
-from collegicoind import ProtonDaemon
+from collegicoind import CollegicoinDaemon
 from models import Superblock, Proposal, GovernanceObject, Watchdog
 from models import VoteSignals, VoteOutcomes, Transient
 import socket
@@ -157,7 +157,7 @@ def is_collegicoind_port_open(collegicoind):
 
 
 def main():
-    collegicoind = ProtonDaemon.from_collegicoin_conf(config.collegicoin_conf)
+    collegicoind = CollegicoinDaemon.from_collegicoin_conf(config.collegicoin_conf)
     options = process_args()
 
     # check collegicoind connectivity

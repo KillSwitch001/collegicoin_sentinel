@@ -65,7 +65,7 @@ def has_collegicoin_conf():
 
     # ensure collegicoin_conf exists & readable
     #
-    # if not, print a message stating that Proton Core must be installed and
+    # if not, print a message stating that Collegicoin Core must be installed and
     # configured, including JSONRPC access in collegicoin.conf
     try:
         f = io.open(config.collegicoin_conf)
@@ -96,7 +96,7 @@ def main():
         sys.exit(1)
 
     if not has_collegicoin_conf():
-        print("ProtonCore must be installed and configured, including JSONRPC access in collegicoin.conf")
+        print("CollegicoinCore must be installed and configured, including JSONRPC access in collegicoin.conf")
         sys.exit(1)
 
 

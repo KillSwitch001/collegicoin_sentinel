@@ -1,9 +1,9 @@
-# Proton Sentinel
+# Collegicoin Sentinel
 
 
-Sentinel is an autonomous agent for persisting, processing and automating Proton governance objects and tasks.
+Sentinel is an autonomous agent for persisting, processing and automating Collegicoin governance objects and tasks.
 
-Sentinel is implemented as a Python application that binds to a local version collegicoind instance on each Proton Masternode.
+Sentinel is implemented as a Python application that binds to a local version collegicoind instance on each Collegicoin Masternode.
 
 This guide covers installing Sentinel onto an existing Masternode in Ubuntu 14.04 / 16.04.
 
@@ -20,7 +20,7 @@ Update system packages and ensure virtualenv is installed:
     $ sudo apt-get update
     $ sudo apt-get -y install python-virtualenv
 
-Make sure the local Proton daemon running is at least version 1.0.1
+Make sure the local Collegicoin daemon running is at least version 1.0.1
 
     $ collegicoin-cli getinfo | grep version
 

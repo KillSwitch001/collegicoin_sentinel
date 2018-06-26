@@ -3,13 +3,13 @@
 """
 import sys
 import os
-from collegicoin_config import ProtonConfig
+from collegicoin_config import CollegicoinConfig
 
 default_sentinel_config = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '../sentinel.conf')
 )
 sentinel_config_file = os.environ.get('SENTINEL_CONFIG', default_sentinel_config)
-sentinel_cfg = ProtonConfig.tokenize(sentinel_config_file)
+sentinel_cfg = CollegicoinConfig.tokenize(sentinel_config_file)
 sentinel_version = "1.1.0"
 min_collegicoind_proto_version_with_sentinel_ping = 70207
 
@@ -19,7 +19,7 @@ def get_collegicoin_conf():
 
     collegicoin_conf = os.path.join(home, ".collegicoincore/collegicoin.conf")
     if sys.platform == 'darwin':
-        collegicoin_conf = os.path.join(home, "Library/Application Support/ProtonCore/collegicoin.conf")
+        collegicoin_conf = os.path.join(home, "Library/Application Support/CollegicoinCore/collegicoin.conf")
 
     collegicoin_conf = sentinel_cfg.get('collegicoin_conf', collegicoin_conf)
 

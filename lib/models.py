@@ -138,7 +138,7 @@ class GovernanceObject(BaseModel):
             printdbg("govobj updated = %d" % count)
         subdikt['governance_object'] = govobj
 
-        # get/create, then sync payment amounts, etc. from collegicoind - Protond is the master
+        # get/create, then sync payment amounts, etc. from collegicoind - Collegicoind is the master
         try:
             newdikt = subdikt.copy()
             newdikt['object_hash'] = object_hash
@@ -306,7 +306,7 @@ class Proposal(GovernanceClass, BaseModel):
 
             # payment address is valid base58 collegicoin addr, non-multisig
             if not collegicoinlib.is_valid_collegicoin_address(self.payment_address, config.network):
-                printdbg("\tPayment address [%s] not a valid Proton address for network [%s], returning False" % (self.payment_address, config.network))
+                printdbg("\tPayment address [%s] not a valid Collegicoin address for network [%s], returning False" % (self.payment_address, config.network))
                 return False
 
             # URL
@@ -364,7 +364,7 @@ class Proposal(GovernanceClass, BaseModel):
         if (self.end_epoch < (misc.now() - thirty_days)):
             return True
 
-        # TBD (item moved to external storage/ProtonDrive, etc.)
+        # TBD (item moved to external storage/CollegicoinDrive, etc.)
         return False
 
     @classmethod
@@ -489,7 +489,7 @@ class Superblock(BaseModel, GovernanceClass):
 
     def is_deletable(self):
         # end_date < (current_date - 30 days)
-        # TBD (item moved to external storage/ProtonDrive, etc.)
+        # TBD (item moved to external storage/CollegicoinDrive, etc.)
         pass
 
     def hash(self):

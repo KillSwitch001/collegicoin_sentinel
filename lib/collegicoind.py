@@ -13,7 +13,7 @@ from decimal import Decimal
 import time
 
 
-class ProtonDaemon():
+class CollegicoinDaemon():
     def __init__(self, **kwargs):
         host = kwargs.get('host', '127.0.0.1')
         user = kwargs.get('user')
@@ -32,9 +32,9 @@ class ProtonDaemon():
 
     @classmethod
     def from_collegicoin_conf(self, collegicoin_dot_conf):
-        from collegicoin_config import ProtonConfig
-        config_text = ProtonConfig.slurp_config_file(collegicoin_dot_conf)
-        creds = ProtonConfig.get_rpc_creds(config_text, config.network)
+        from collegicoin_config import CollegicoinConfig
+        config_text = CollegicoinConfig.slurp_config_file(collegicoin_dot_conf)
+        creds = CollegicoinConfig.get_rpc_creds(config_text, config.network)
 
         return self(**creds)
 

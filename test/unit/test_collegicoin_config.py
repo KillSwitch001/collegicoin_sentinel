@@ -6,7 +6,7 @@ os.environ['SENTINEL_CONFIG'] = os.path.normpath(os.path.join(os.path.dirname(__
 os.environ['SENTINEL_ENV'] = 'test'
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../../lib')))
 import config
-from collegicoin_config import ProtonConfig
+from collegicoin_config import CollegicoinConfig
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ rpcport={rpcport}
 
 def test_get_rpc_creds():
     collegicoin_config = collegicoin_conf()
-    creds = ProtonConfig.get_rpc_creds(collegicoin_config, 'testnet')
+    creds = CollegicoinConfig.get_rpc_creds(collegicoin_config, 'testnet')
 
     for key in ('user', 'password', 'port'):
         assert key in creds
@@ -44,7 +44,7 @@ def test_get_rpc_creds():
     assert creds.get('port') == 29241
 
     collegicoin_config = collegicoin_conf(rpcpassword='s00pers33kr1t', rpcport=8000)
-    creds = ProtonConfig.get_rpc_creds(collegicoin_config, 'testnet')
+    creds = CollegicoinConfig.get_rpc_creds(collegicoin_config, 'testnet')
 
     for key in ('user', 'password', 'port'):
         assert key in creds
@@ -53,7 +53,7 @@ def test_get_rpc_creds():
     assert creds.get('port') == 8000
 
     no_port_specified = re.sub('\nrpcport=.*?\n', '\n', collegicoin_conf(), re.M)
-    creds = ProtonConfig.get_rpc_creds(no_port_specified, 'testnet')
+    creds = CollegicoinConfig.get_rpc_creds(no_port_specified, 'testnet')
 
     for key in ('user', 'password', 'port'):
         assert key in creds

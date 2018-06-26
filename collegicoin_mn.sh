@@ -1,5 +1,5 @@
 echo "=================================================================="
-echo "Protoncoin MN Install"
+echo "Collegicoincoin MN Install"
 echo "=================================================================="
 
 #read -p 'Enter your masternode genkey you created in windows, then hit [ENTER]: ' GENKEY
