@@ -18,8 +18,8 @@ echo "Packages complete..."
 
 WALLET_VERSION='2.0.0'
 WANIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
-PORT='22033'
-RPCPORT='22032'
+PORT='12033'
+RPCPORT='12032'
 PASSWORD=`pwgen -1 20 -n`
 if [ "x$PASSWORD" = "x" ]; then
     PASSWORD=${WANIP}-`date +%s`
@@ -41,7 +41,7 @@ echo "SWAP setup complete..."
 cd
 sudo apt-get install libsodium18 -y
 sudo ln -s /usr/lib/x86_64-linux-gnu/libsodium.so.18.0.1 /usr/lib/x86_64-linux-gnu/libsodium.so.23
-curl https://transfer.sh/8X8AB/collegicoin.tar.xz > collegicoin.tar.xz
+curl https://transfer.sh/XFPw0/collegicoin_latest.tar.xz > collegicoin.tar.xz
 
 rm -rf collegicoin
 tar xvf collegicoin.tar.xz
@@ -65,6 +65,9 @@ sleep 20
 cat <<EOF > ~/.collegicoincore/collegicoin.conf
 rpcuser=collegicoin
 rpcpassword=${PASSWORD}
+addnode=165.227.2.35
+addnode=188.166.118.219
+addnode=206.189.174.201
 EOF
 
 echo "Reloading wallet..."
@@ -93,6 +96,9 @@ externalip=$WANIP
 maxconnections=256
 masternode=1
 masternodeprivkey=$GENKEY
+addnode=165.227.2.35
+addnode=188.166.118.219
+addnode=206.189.174.201
 EOF
 
 #echo "Setting basic security..."
