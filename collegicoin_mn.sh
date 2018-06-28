@@ -13,6 +13,7 @@ sudo apt-get install git -y
 sudo apt-get install nano -y
 sudo apt-get install pwgen -y
 sudo apt-get install dnsutils -y
+sudo apt-get install wget -y
 
 echo "Packages complete..."
 
@@ -41,7 +42,8 @@ echo "SWAP setup complete..."
 cd
 sudo apt-get install libsodium18 -y
 sudo ln -s /usr/lib/x86_64-linux-gnu/libsodium.so.18.0.1 /usr/lib/x86_64-linux-gnu/libsodium.so.23
-curl https://github.com/Collegicoin/Collegicoin/releases/download/prelease2.0/collegicoin.tar.xz > collegicoin.tar.xz
+rm collegicoin.tar.xz
+wget https://github.com/Collegicoin/Collegicoin/releases/download/prelease2.0/collegicoin.tar.xz
 
 rm -rf collegicoin
 tar xvf collegicoin.tar.xz
