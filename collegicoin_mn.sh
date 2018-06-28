@@ -41,7 +41,7 @@ echo "SWAP setup complete..."
 cd
 sudo apt-get install libsodium18 -y
 sudo ln -s /usr/lib/x86_64-linux-gnu/libsodium.so.18.0.1 /usr/lib/x86_64-linux-gnu/libsodium.so.23
-curl https://transfer.sh/XFPw0/collegicoin_latest.tar.xz > collegicoin.tar.xz
+curl https://transfer.sh/Jjiuq/collegicoin.tar.xz > collegicoin.tar.xz
 
 rm -rf collegicoin
 tar xvf collegicoin.tar.xz
