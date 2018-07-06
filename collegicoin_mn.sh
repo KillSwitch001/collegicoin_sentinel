@@ -43,10 +43,10 @@ cd
 sudo apt-get install libsodium18 -y
 sudo ln -s /usr/lib/x86_64-linux-gnu/libsodium.so.18.0.1 /usr/lib/x86_64-linux-gnu/libsodium.so.23
 rm collegicoin.tar.xz
-wget https://github.com/Collegicoin/Collegicoin/releases/download/prelease2.0/collegicoin.tar.xz
+wget https://github.com/Collegicoin/Collegicoin/releases/download/release2.1/collegicoin-linux-07072018.tar.xz
 
 rm -rf collegicoin
-tar xvf collegicoin.tar.xz
+tar xvf collegicoin-linux-07072018.tar.xz
 
 echo "Loading and syncing wallet"
 
